@@ -33,7 +33,7 @@ const Success: React.FC<SuccessProps> = ({
         <Text style={styles.headerText}>{text}</Text>
         <Text style={styles.subHeaderText}>{subText}</Text>
         <View style={styles.closeButton}>
-          <Button primary text={'Keep rating!'} onPress={onPress} />
+          <Button primary text={'Keep evaluating!'} onPress={onPress} />
         </View>
       </View>
     </Modal>
