@@ -3,8 +3,8 @@
 Tap the emoji that best represents your mood!
 
 ## Run this project
-  git clone https://github.com/andersonassisb/ZenklubChallenge.git <br />
-  cd ZenklubChallenge <br />
+  git clone https://github.com/andersonassisb/ZenChallenge.git <br />
+  cd ZenChallenge <br />
   yarn install <br />
 
   ### Android
