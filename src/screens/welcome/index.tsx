@@ -1,11 +1,10 @@
 import React from 'react'
-import { Text, SafeAreaView, View } from 'react-native'
+import { Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import type { StackNavigationProp } from '@react-navigation/stack'
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
-  interpolate,
   withTiming,
   withSpring,
   Easing,
@@ -18,6 +17,16 @@ const Welcome: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<any>>()
   const rotation = useSharedValue(0)
   const scale = useSharedValue(1)
+  const opacity = useSharedValue(0)
+
+  React.useEffect(() => {
+    if (rotation) {
+      rotation.value = withTiming(360, {
+        duration: 3000,
+        easing: Easing.out(Easing.exp),
+      })
+    }
+  }, [rotation])
 
   React.useEffect(() => {
     if (scale) {
@@ -30,18 +39,24 @@ const Welcome: React.FC = () => {
           duration: 3000,
           easing: Easing.out(Easing.exp),
         })
-      }, 3000);
+      }, 3000)
     }
   }, [scale])
 
   React.useEffect(() => {
-    if (rotation) {
-      rotation.value = withTiming(360, {
-        duration: 3000,
+    if (opacity) {
+      opacity.value = withTiming(1, {
+        duration: 2000,
         easing: Easing.out(Easing.exp),
       })
     }
-  }, [rotation])
+  }, [opacity])
+
+  const animatedContainerViewStyles = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    }
+  })
 
   const animatedViewStyles = useAnimatedStyle(() => {
     return {
@@ -64,7 +79,7 @@ const Welcome: React.FC = () => {
   })
 
   return (
-    <SafeAreaView style={styles.container}>
+    <Animated.View style={[styles.container, animatedContainerViewStyles]}>
       <Animated.View style={animatedViewStyles}>
         <Animated.Image source={Logo} style={animatedImageStyles} />
       </Animated.View>
@@ -74,7 +89,7 @@ const Welcome: React.FC = () => {
         primaryTextButton
         text={"Let's go there"}
       />
-    </SafeAreaView>
+    </Animated.View>
   )
 }
 
