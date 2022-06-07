@@ -57,7 +57,7 @@ const Welcome: React.FC = () => {
         toValue: 0,
         duration: 1000,
         easing: Easing.out(Easing.exp),
-      })
+      }).start()
     }
   }, [bottom])
 
