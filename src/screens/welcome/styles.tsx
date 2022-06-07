@@ -19,7 +19,9 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: colors.white,
     fontWeight: '500',
+    alignSelf: 'center',
     marginBottom: metrics.triplePixel,
+    height: metrics.fourFoldPixel,
   },
 })
 

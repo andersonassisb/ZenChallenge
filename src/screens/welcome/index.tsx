@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text } from 'react-native'
+import { Text, useWindowDimensions } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import type { StackNavigationProp } from '@react-navigation/stack'
 import Animated, { Easing } from 'react-native-reanimated'
@@ -9,10 +9,12 @@ import styles from './styles'
 
 const Welcome: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<any>>()
+  const layout = useWindowDimensions()
   const rotation = React.useRef(new Animated.Value(0))
   const scale = React.useRef(new Animated.Value(1))
   const opacity = React.useRef(new Animated.Value(0))
   const bottom = React.useRef(new Animated.Value(-60))
+  const width = React.useRef(new Animated.Value(0))
 
   React.useEffect(() => {
     if (rotation) {
@@ -61,6 +63,16 @@ const Welcome: React.FC = () => {
     }
   }, [bottom])
 
+  React.useEffect(() => {
+    if (width) {
+      Animated.timing(width.current, {
+        toValue: layout.width,
+        duration: 1500,
+        easing: Easing.out(Easing.linear),
+      }).start()
+    }
+  }, [width])
+
   const animatedContainerViewStyles = {
     opacity: opacity.current,
   }
@@ -85,13 +97,19 @@ const Welcome: React.FC = () => {
     bottom: bottom.current,
   }
 
+  const animatedTitleStyles = {
+    width: width.current,
+  }
+
   return (
     <Animated.View style={[styles.container, animatedContainerViewStyles]}>
       <Animated.View style={animatedViewStyles}>
         <Animated.Image source={Logo} style={animatedImageStyles} />
       </Animated.View>
       <Animated.View style={animatedWrapperStyles}>
-        <Text style={styles.title}>Welcome to the ZenChallenge!</Text>
+        <Animated.Text style={[styles.title, animatedTitleStyles]}>
+          Welcome to the ZenChallenge!
+        </Animated.Text>
         <Button
           onPress={() => navigation.navigate('Main')}
           primaryTextButton
