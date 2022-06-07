@@ -2,97 +2,88 @@ import React from 'react'
 import { Text } from 'react-native'
 import { useNavigation } from '@react-navigation/native'
 import type { StackNavigationProp } from '@react-navigation/stack'
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withTiming,
-  withSpring,
-  Easing,
-} from 'react-native-reanimated'
+import Animated, { Easing } from 'react-native-reanimated'
 import Logo from '../../assets/images/logo.png'
 import Button from '../../components/Button'
 import styles from './styles'
 
 const Welcome: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<any>>()
-  const rotation = useSharedValue(0)
-  const scale = useSharedValue(1)
-  const opacity = useSharedValue(0)
-  const bottom = useSharedValue(-60)
+  const rotation = React.useRef(new Animated.Value(0))
+  const scale = React.useRef(new Animated.Value(1))
+  const opacity = React.useRef(new Animated.Value(0))
+  const bottom = React.useRef(new Animated.Value(-60))
 
   React.useEffect(() => {
     if (rotation) {
-      rotation.value = withTiming(360, {
+      Animated.timing(rotation.current, {
+        toValue: 2 * Math.PI,
         duration: 3000,
         easing: Easing.out(Easing.exp),
-      })
+      }).start()
     }
   }, [rotation])
 
   React.useEffect(() => {
     if (scale) {
-      scale.value = withTiming(0.5, {
+      Animated.timing(scale.current, {
+        toValue: 0.5,
         duration: 3000,
         easing: Easing.out(Easing.exp),
-      })
+      }).start()
       setTimeout(() => {
-        scale.value = withTiming(1, {
+        Animated.timing(scale.current, {
+          toValue: 1,
           duration: 3000,
           easing: Easing.out(Easing.exp),
-        })
+        }).start()
       }, 3000)
     }
   }, [scale])
 
   React.useEffect(() => {
     if (opacity) {
-      opacity.value = withTiming(1, {
+      Animated.timing(opacity.current, {
+        toValue: 1,
         duration: 2000,
         easing: Easing.out(Easing.exp),
-      })
+      }).start()
     }
   }, [opacity])
 
   React.useEffect(() => {
     if (bottom) {
-      bottom.value = withTiming(0, {
+      Animated.timing(bottom.current, {
+        toValue: 0,
         duration: 1000,
         easing: Easing.out(Easing.exp),
       })
     }
   }, [bottom])
 
-  const animatedContainerViewStyles = useAnimatedStyle(() => {
-    return {
-      opacity: opacity.value,
-    }
-  })
+  const animatedContainerViewStyles = {
+    opacity: opacity.current,
+  }
 
-  const animatedViewStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          scale: withSpring(scale.value),
-        },
-      ],
-    }
-  })
+  const animatedViewStyles = {
+    transform: [
+      {
+        scale: scale.current,
+      },
+    ],
+  }
 
-  const animatedImageStyles = useAnimatedStyle(() => {
-    return {
-      transform: [
-        {
-          rotateZ: withSpring(`${rotation.value}deg`),
-        },
-      ],
-    }
-  })
+  const animatedImageStyles = {
+    transform: [
+      {
+        rotateZ: rotation.current,
+      },
+    ],
+  }
 
-  const animatedWrapperStyles = useAnimatedStyle(() => {
-    return {
-      bottom: withSpring(bottom.value)
-    }
-  })
+  const animatedWrapperStyles = {
+    bottom: bottom.current,
+  }
 
   return (
     <Animated.View style={[styles.container, animatedContainerViewStyles]}>
