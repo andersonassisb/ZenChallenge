@@ -17,7 +17,7 @@ const Welcome: React.FC = () => {
   React.useEffect(() => {
     if (rotation) {
       Animated.timing(rotation.current, {
-        toValue: 2 * Math.PI,
+        toValue: 4 * Math.PI,
         duration: 3000,
         easing: Easing.out(Easing.exp),
       }).start()
