@@ -18,6 +18,7 @@ const Welcome: React.FC = () => {
   const rotation = useSharedValue(0)
   const scale = useSharedValue(1)
   const opacity = useSharedValue(0)
+  const bottom = useSharedValue(-60)
 
   React.useEffect(() => {
     if (rotation) {
@@ -52,6 +53,15 @@ const Welcome: React.FC = () => {
     }
   }, [opacity])
 
+  React.useEffect(() => {
+    if (bottom) {
+      bottom.value = withTiming(0, {
+        duration: 1000,
+        easing: Easing.out(Easing.exp),
+      })
+    }
+  }, [bottom])
+
   const animatedContainerViewStyles = useAnimatedStyle(() => {
     return {
       opacity: opacity.value,
@@ -72,9 +82,15 @@ const Welcome: React.FC = () => {
     return {
       transform: [
         {
-          rotateZ: `${rotation.value}deg`,
+          rotateZ: withSpring(`${rotation.value}deg`),
         },
       ],
+    }
+  })
+
+  const animatedWrapperStyles = useAnimatedStyle(() => {
+    return {
+      bottom: withSpring(bottom.value)
     }
   })
 
@@ -83,12 +99,14 @@ const Welcome: React.FC = () => {
       <Animated.View style={animatedViewStyles}>
         <Animated.Image source={Logo} style={animatedImageStyles} />
       </Animated.View>
-      <Text style={styles.title}>Welcome to the ZenChallenge!</Text>
-      <Button
-        onPress={() => navigation.navigate('Main')}
-        primaryTextButton
-        text={"Let's go there"}
-      />
+      <Animated.View style={animatedWrapperStyles}>
+        <Text style={styles.title}>Welcome to the ZenChallenge!</Text>
+        <Button
+          onPress={() => navigation.navigate('Main')}
+          primaryTextButton
+          text={"Let's go there"}
+        />
+      </Animated.View>
     </Animated.View>
   )
 }
