@@ -17,6 +17,7 @@ const Welcome: React.FC = () => {
   const navigation = useNavigation<StackNavigationProp<any>>()
   const rotation = useSharedValue(0)
   const scale = useSharedValue(1)
+  const scaleContent = useSharedValue(0)
   const opacity = useSharedValue(0)
   const bottom = useSharedValue(-60)
 
@@ -43,6 +44,15 @@ const Welcome: React.FC = () => {
       }, 3000)
     }
   }, [scale])
+
+  React.useEffect(() => {
+    if (scaleContent) {
+      scaleContent.value = withTiming(1, {
+        duration: 3000,
+        easing: Easing.out(Easing.exp),
+      })
+    }
+  }, [scaleContent])
 
   React.useEffect(() => {
     if (opacity) {
@@ -90,7 +100,17 @@ const Welcome: React.FC = () => {
 
   const animatedWrapperStyles = useAnimatedStyle(() => {
     return {
-      bottom: withSpring(bottom.value)
+      bottom: withSpring(bottom.value),
+    }
+  })
+
+  const animatedWrapperScaleStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        {
+          scale: withSpring(scaleContent.value),
+        },
+      ],
     }
   })
 
@@ -99,7 +119,8 @@ const Welcome: React.FC = () => {
       <Animated.View style={animatedViewStyles}>
         <Animated.Image source={Logo} style={animatedImageStyles} />
       </Animated.View>
-      <Animated.View style={animatedWrapperStyles}>
+      <Animated.View
+        style={[animatedWrapperStyles, animatedWrapperScaleStyles]}>
         <Text style={styles.title}>Welcome to the ZenChallenge!</Text>
         <Button
           onPress={() => navigation.navigate('Main')}
